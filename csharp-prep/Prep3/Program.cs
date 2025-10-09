@@ -9,7 +9,7 @@ class Program
         int magic = 0;
         bool replay = true;
         //replayability loop
-        while (replay == true)
+        while (replay)
         {
             string again = "";
             int count = 0;

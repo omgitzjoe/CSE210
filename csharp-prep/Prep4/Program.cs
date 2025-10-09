@@ -14,8 +14,16 @@ class Program
         Console.WriteLine("Enter 0 to finish");
         while (number != 0)
         {
-            number = int.Parse(Console.ReadLine());
-
+            string userInput = Console.ReadLine();
+            if (int.TryParse(userInput, out number))
+            {
+                number = int.Parse(userInput);
+            }
+            else
+            {
+                Console.WriteLine("That is not a valid input");
+                return;
+            }
             if (number != 0)
             {
                 //add to list and add its total to the sum

@@ -39,7 +39,7 @@ class Program
                 plus_minus = "-";
             }
             
-        if (letter == "A" && percentage % 10 < 3)
+        if (letter == "A" && percentage % 10 < 3 && percentage < 94)
         {
             plus_minus = "-";
         }

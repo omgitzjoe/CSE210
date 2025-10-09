@@ -5,9 +5,11 @@ class Program
 {
     static void Main(string[] args)
     {
+        //declaring variables
         bool run = true;
         string filename=null;
         int option = -1;
+        //creating objects
         Menu menu=new Menu();
         Journal journal = new Journal();
         //keep the menu running each time a task is completed
@@ -26,6 +28,7 @@ class Program
                     Console.ReadLine();
                     break;
                 case 2:
+                    //Made an if/else to check if there is a Journal selected, prompts for one if not
                     if (filename != null)
                         {
                             //This case creates an entry and saves it to the current file
