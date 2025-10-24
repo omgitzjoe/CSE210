@@ -22,7 +22,9 @@ class Scripture
     //This should format the list of words
     public void Display()
     {
+        //show reference
         Console.WriteLine(reference.GetReference());
+        //Print the words
         foreach (Word word in text)
         {
             Console.Write(word.Display() + " ");
