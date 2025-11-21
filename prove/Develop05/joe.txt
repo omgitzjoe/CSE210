@@ -1,0 +1,4 @@
+3650
+Eternal|read|read the scriptures|100|False|0
+Checklist|bedtime|put kids to bed|50|True|3|2|500
+Checklist|medicine|take meds|50|True|4|4|200
