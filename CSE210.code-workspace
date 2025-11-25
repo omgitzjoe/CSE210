@@ -1,10 +1,13 @@
 {
 	"folders": [
 		{
-			"path": "."
+			"path": "../../cse351/cse351-student-version"
 		},
 		{
-			"path": "../../cse351/cse351-student-version"
+			"path": "../../cse351/CSE210"
+		},
+		{
+			"path": "../../OneDrive - BYU-Idaho/Desktop/CSE-130"
 		}
 	],
 	"settings": {}
