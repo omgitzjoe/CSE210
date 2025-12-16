@@ -1,19 +1,22 @@
-﻿using Characters;
+﻿namespace FinalProject;
+
 public class Party
 {
-    private List<Character> _characters=new List<Character>();
+    private readonly List<Character> _characters = new List<Character>();
+    
     public List<Character> GetCharacters() => _characters;
+    
     //add or remove members
     public void AddMember(Character character)
     {
         _characters.Add(character);
-        Console.WriteLine($"{character.GetName()} has been added to the party!\n");
     }
+    
     public void RemoveMember(Character character)
     {
-        _characters.Remove(character);
-        Console.WriteLine($"{character.GetName()} has been removed from the party!\n");
+        _characters.Remove(character); 
     }
+    
     public void DisplayMembers()
     {
         int index = 0;

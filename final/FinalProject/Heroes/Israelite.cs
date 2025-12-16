@@ -1,11 +1,11 @@
-﻿namespace Characters;
-
+﻿namespace FinalProject.Heroes;
+using FinalProject;
 public class Israelite:Character
 {
     public Israelite(string name) : base(name)
     {
-        _story = "You followed every law, did all the right things, but were always shorted in life.\n" +
-                 "Now it's time to do unto the world what it has done unto you";
+        ChangeStory("You followed every law, did all the right things, but were always shorted in life.\n" +
+                 "Now it's time to do unto the world what it has done unto you");
         ChangeDexterity(2);
         ChangeWisdom(2); 
         ChangeIntelligence(2);

@@ -1,6 +1,6 @@
-﻿namespace Characters;
-
-public class Angel:Character
+﻿namespace FinalProject.Heroes;
+using FinalProject;
+public class Angel : Character
 {
     public Angel(string name) : base(name)
     {
@@ -13,6 +13,7 @@ public class Angel:Character
         ChangeMelee(-2);
         ChangeClass("Angel");
     }
+    
     public void HealAlly(Character ally)
     {
         ally.ChangeHealth(20);

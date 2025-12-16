@@ -1,58 +1,62 @@
-﻿
-using System.ComponentModel.DataAnnotations;
-using Characters;
+﻿namespace FinalProject;
+
+using Heroes;
 
 public class Combat
 {
     private static readonly Random Die = new Random();
-    public static int RollDie(int sides)
+    
+    private static int RollDie(int sides)
     {
         return Die.Next(1, sides + 1);
     }
     
     //combat results
-    
     //Check for if dodged
-    public static bool Dodge(Character target)
+    private static bool Dodge(Character target)
     {
-        if (RollDie(15) + target.GetDexterity() >= 25)
+        if (RollDie(12) + target.GetDexterity() >= 30)
         {
             Console.WriteLine($"{target.GetName()} dodged the attack");
             return true;
         }
+        
         return false; 
     }
     
-    public static int MeleeAttack(Character character, Character target)
+    private static int MeleeAttack(Character character, Character target)
     {
         if (!Dodge(target))
         {
-            int m_damage = character.GetMeleeDamage() + RollDie(6) - target.GetShield();
-            if (m_damage <= 0)
+            int mDamage = character.GetMeleeDamage() + RollDie(6) - target.GetShield();
+            if (mDamage <= 0)
             {
-                m_damage = 0;
+                mDamage = 0;
             }
-            return m_damage;
+            
+            return mDamage;
         }
+        
         return 0;
     }
     
-    public static int RangeAttack(Character character, Character target)
+    private static int RangeAttack(Character character, Character target)
     {
         if (!Dodge(target))
         {
-            int r_damage = character.GetRangedDamaged() + RollDie(6) - target.GetShield();
-            if (r_damage <= 0)
+            int rDamage = character.GetRangedDamaged() + RollDie(6) - target.GetShield();
+            if (rDamage <= 0)
             {
-                r_damage = 0;
+                rDamage = 0;
             }
 
-            return r_damage;
+            return rDamage;
         }
+        
         return 0;
     }
 
-    public void AttackResult(Character hero, Character target, Party heroes)
+    private static void AttackResult(Character hero, Character target, Party heroes, Party villains)
     {
         //if melee
         if (hero.GetAction().ToUpper() == "M")
@@ -62,31 +66,32 @@ public class Combat
             target.ChangeHealth(-melee);
             Console.WriteLine($"{target.GetName()} has {target.GetHealth()} health");
         }
+
         //if ranged
         if (hero.GetAction().ToUpper() == "R")
         {
-            int ranged = RangeAttack(hero,target);
+            int ranged = RangeAttack(hero, target);
             Console.WriteLine($"{hero.GetName()} deals {ranged} damage");
             target.ChangeHealth(-ranged);
             if (target.GetHealth() <= 0)
             {
                 Console.WriteLine($"{target.GetName()} has been defeated");
+                villains.RemoveMember(target);
             }
-            Console.WriteLine($"{target.GetName()} has {target.GetHealth()} health");
         }
-        
+
         //Unique heal move for anti-nephi-lehite
-        if (hero.GetAction().ToUpper() == "H" && hero is Anti_Nephi_Lehite healer)
+        if (hero.GetAction().ToUpper() == "H" && hero is AntiNephiLehite healer)
         {
             Character ally = null;
             var allies = heroes.GetCharacters();
-            
+    
             //loop until a valid ally is found
             while (ally == null)
             {
                 Console.WriteLine("Who will you heal? (Exact spelling!)");
                 string input = Console.ReadLine();
-                
+
                 //Find ally in the list
                 foreach (var a in allies)
                 {
@@ -96,9 +101,11 @@ public class Combat
                         break; // stop looping once we find it
                     }
                 }
+
                 if (ally == null)
                     Console.WriteLine("Try again.(exact spelling!)");
             }
+
             //once found, heal
             healer.HealAlly(ally);
             Console.WriteLine($"{hero.GetName()} heals {ally.GetName()} for 10 health!");
@@ -106,7 +113,7 @@ public class Combat
         }
     }
 
-    public void CombatRound(Party heroes, Party villains)
+    public void CombatSequence(Party heroes, Party villains)
     {
         while (heroes.GetCharacters().Count > 0 &&
                villains.GetCharacters().Count > 0)
@@ -115,86 +122,72 @@ public class Combat
             var villainList = villains.GetCharacters();
             foreach (var v in villainList)
             {
-                Console.WriteLine($"{v.GetName()} has {v.GetHealth()} health");
+                Console.WriteLine($"Enemy {v.GetName()} has {v.GetHealth()} health");
             }
 
+            Console.WriteLine("\n");
             // Heroes take their turns
             foreach (var hero in heroList)
             {
-                //acquire target
+                Console.WriteLine($"What will {hero.GetName()} do? Melee, ranged, or heal? (M, R, H)");
+
+                string action = Console.ReadLine()?.Trim().ToUpper();
+                hero.ChangeAction(action);
+
                 Character target = null;
-                while (target == null)
+
+                if (action == "M" || action == "R")
                 {
-                    //choose action
-                    bool valid = false;
-                    Console.WriteLine($"What will {hero.GetName()} do? Melee or ranged attack? (M or R)");
-                    //validate the input
-                    while (!valid)
-                    {
-                        string action = Console.ReadLine();
-                        if (action.ToUpper() == "M" || action.ToUpper() == "R" || action.ToUpper() == "H")
-                        {
-                            hero.ChangeAction(action);
-                            valid = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Please enter M, R, or H if you can heal");
-                        }
-                    }
+                    Console.WriteLine($"Which enemy will {hero.GetName()} attack? (0–{villainList.Count - 1})");
 
-                    if (hero.GetAction().ToUpper() == "M" || hero.GetAction().ToUpper() == "R")
-                    {
-                        Console.WriteLine($"Who will {hero.GetName()} attack? (Exact spelling!)");
-                        string input = Console.ReadLine();
-                        foreach (var v in villainList)
-                        {
-                            if (v.GetName() == input)
-                            {
-                                target = v;
-                                break;
-                            }
-                        }
-
-                        if (target == null)
-                            Console.WriteLine("No such villain, missed opportunity");
-                    }
+                    int choice = Helper.IntTest(Console.ReadLine());
+                    target = villainList[choice];
                 }
-                AttackResult(hero, target, heroes);
+                
+                AttackResult(hero, target, heroes, villains);
 
-                if (target.GetHealth() <= 0)
+
+                if (target != null && target.GetHealth() <= 0)
                 {
                     Console.WriteLine($"{target.GetName()} has been defeated");
                     villains.RemoveMember(target);
                 }
-                
-                //end if villains are dead
+
                 if (villains.GetCharacters().Count == 0)
                 {
                     Console.WriteLine("All villains are defeated. You win!");
                     return;
                 }
             }
-
-            // Villains take their turns
+            
             foreach (var villain in villainList)
             {
                 // Choose a random hero target
                 int targetIndex = RollDie(heroList.Count) - 1;
                 Character target = heroList[targetIndex];
 
-                AttackResult(villain, target, heroes);
+                // Resolve attack
+                AttackResult(villain, target, heroes, villains);
+
+                Console.WriteLine($"{target.GetName()} has been attacked, {target.GetHealth()} health remaining");
+
+                // Remove hero if defeated
                 if (target.GetHealth() <= 0)
                 {
                     Console.WriteLine($"{target.GetName()} has been defeated");
+
+                    // If the first hero dies, end the game
                     if (target == heroList[0])
                     {
                         Console.WriteLine("Nooooo, I gave it my all!\nGame Over :(");
                         Console.ReadKey();
                         Environment.Exit(0);
                     }
+                    
                     heroes.RemoveMember(target);
                 }
+
+                Console.ReadKey();
             }
         }
     }

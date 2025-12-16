@@ -1,4 +1,6 @@
-﻿using Characters;
+﻿namespace FinalProject;
+
+using Heroes;
 
 public static class Helper
 {
@@ -31,8 +33,9 @@ public static class Helper
 
         return choice;
     }
+
     //check for member choice validity
-    public static int MemberTest(string input,Party members)
+    public static int MemberTest(string input, Party members)
     {
         bool invalid = true;
         int choice = 0;
@@ -44,17 +47,20 @@ public static class Helper
                 input = Console.ReadLine();
                 continue;
             }
+
             if (choice < 0 || choice >= members.GetCharacters().Count)
             {
                 Console.WriteLine("Invalid choice, please pick a number from the list.");
                 input = Console.ReadLine();
                 continue;
             }
+
             invalid = false;
         }
 
         return choice;
     }
+
     //create a hero
     public static Character CreateCharacter(string name)
     {
@@ -82,12 +88,13 @@ public static class Helper
                 {
                     Console.WriteLine("\nYou have chosen Lamanite; a natural warrior!\n");
                     Character hero = new Lamanite(name);
-                    
+
                     //cheat code for kicks
                     if (name == "Samuel")
                     {
                         hero.ChangeDexterity(10);
                     }
+
                     return hero;
                 }
                 case 3:
@@ -98,13 +105,13 @@ public static class Helper
                 case 4:
                 {
                     Console.WriteLine("\nYou have chosen Robber; sneaky, crafty, but with a heart of gold!\n");
-                    return new Reformed_Robber(name);
+                    return new Robber(name);
                 }
                 case 5:
                 {
                     Console.WriteLine("\nYou have chosen Anti-Nephi-Lehite; useful ally, not a useful warrior!\n");
                     Console.WriteLine("These souls have a unique ability to heal an ally");
-                    return new Anti_Nephi_Lehite(name);
+                    return new AntiNephiLehite(name);
                 }
                 default:
                 {
@@ -114,5 +121,4 @@ public static class Helper
             }
         }
     }
-    //new
 }
